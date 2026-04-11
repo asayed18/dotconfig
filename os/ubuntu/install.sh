@@ -65,17 +65,19 @@ install_if_requested "git" "git"
 echo "Installing Themes & Fonts..."
 sudo apt install $APT_FLAGS \
     fonts-font-awesome fonts-noto-color-emoji \
-    arc-theme arc-icon-theme \
-    python3-pip imagemagick bc
+    arc-theme \
+    python3-pip pipx imagemagick bc
 
 # Modular theme choices
 install_if_requested "theme" "papirus-icon-theme" # Only if theme module is selected
-install_if_requested "wpg" "python3-pywal"
+install_if_requested "wpg" ""
 
-# WPGTK installation (requires pip)
+# WPGTK & Pywal installation (requires pipx)
 if [[ "$MODULES_LIST" == *"wpg"* ]] && ! command -v wpg &> /dev/null; then
-    echo "📦 Installing WPGTK..."
-    pip3 install --user wpgtk
+    echo "📦 Installing Pywal and WPGTK via pipx..."
+    pipx install pywal --force
+    pipx install wpgtk --force
+    export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # 4. Third-Party / Script-based Installs
@@ -100,7 +102,7 @@ fi
 if ! command -v betterlockscreen &> /dev/null; then
     echo "Installing betterlockscreen..."
     sudo apt install $APT_FLAGS i3lock imagemagick bc
-    sudo curl -fsSL "https://github.com/betterlockscreen/betterlockscreen/releases/latest/download/betterlockscreen-linux-x86_64" -o /usr/local/bin/betterlockscreen
+    sudo curl -fsSL "https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/betterlockscreen" -o /usr/local/bin/betterlockscreen
     sudo chmod +x /usr/local/bin/betterlockscreen
 fi
 

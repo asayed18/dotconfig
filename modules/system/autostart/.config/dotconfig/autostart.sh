@@ -66,7 +66,8 @@ fi
 
 # Apply Theme / Wallpaper
 if module_enabled "wpg"; then
-    wpg -rs &
+    # Only restore if a theme has been set previously
+    [ -f "$HOME/.config/wpg/.current" ] && wpg -rs &
 elif command -v feh &> /dev/null; then
     # Fallback wallpaper if wpg isn't used
     feh --bg-fill "$HOME/Pictures/desktop.png" &
