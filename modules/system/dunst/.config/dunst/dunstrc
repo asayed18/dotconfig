@@ -1,11 +1,23 @@
 [global]
     monitor = 0
     follow = mouse
-    geometry = "300x5-30+50"
+    
+    ### Dimensions and Position ###
+    width = 300
+    height = 500
+    origin = top-right
+    offset = 30x50
+    
+    ### Progress Bar ###
+    progress_bar = true
+    progress_bar_height = 10
+    progress_bar_frame_width = 1
+    progress_bar_min_width = 150
+    progress_bar_max_width = 300
+
     indicate_hidden = yes
     shrink = no
     transparency = 0
-    notification_height = 0
     separator_height = 2
     padding = 8
     horizontal_padding = 8
@@ -38,7 +50,7 @@
     class = Dunst
     corner_radius = 8
 
-[shortcuts]
+    ### Shortcuts (Moved from [shortcuts] section) ###
     close = ctrl+space
     close_all = ctrl+shift+space
     history = ctrl+grave

@@ -309,11 +309,25 @@ EOF
                 mkdir -p "$HOME/.local/bin"
                 
                 echo "🔗 Linking Generic Application Defaults..."
-                [ -n "${CATEGORY_SELECTIONS[terminal]}" ] && ln -sf "$(which "${CATEGORY_SELECTIONS[terminal]}")" "$HOME/.local/bin/terminal"
-                [ -n "${CATEGORY_SELECTIONS[files]}" ] && ln -sf "$(which "${CATEGORY_SELECTIONS[files]}")" "$HOME/.local/bin/files"
-                [ -n "${CATEGORY_SELECTIONS[browser]}" ] && ln -sf "$(which "${CATEGORY_SELECTIONS[browser]}")" "$HOME/.local/bin/browser"
+                link_default() {
+                    local cat=$1
+                    local bin=$2
+                    local app=${CATEGORY_SELECTIONS[$cat]}
+                    if [ -n "$app" ]; then
+                        local path=$(which "$app" 2>/dev/null)
+                        if [ -n "$path" ]; then
+                            ln -sf "$path" "$HOME/.local/bin/$bin"
+                        fi
+                    fi
+                }
+
+                link_default "terminal" "terminal"
+                link_default "files" "files"
+                link_default "browser" "browser"
+                
                 # Link default editor
-                ln -sf "$(which vim)" "$HOME/.local/bin/editor" || ln -sf "$(which nano)" "$HOME/.local/bin/editor"
+                EDITOR_PATH=$(which nvim 2>/dev/null || which vim 2>/dev/null || which nano 2>/dev/null)
+                [ -n "$EDITOR_PATH" ] && ln -sf "$EDITOR_PATH" "$HOME/.local/bin/editor"
                 
                 # 7b. Update XDG Mime Types
                 echo "📁 Updating XDG Default MIME Types..."
@@ -325,8 +339,8 @@ EOF
                 update_mime_entry() {
                     local mime=$1
                     local app=$2
-                    # Remove existing entries for this mime type
-                    sed -i "/$mime/d" "$XDG_MIME"
+                    # Remove existing entries for this mime type using # as delimiter
+                    sed -i "|\#$mime|d" "$XDG_MIME"
                     # Add new entry
                     if [ -n "$app" ]; then
                         echo "$mime=$app.desktop" >> "$XDG_MIME"

@@ -18,8 +18,10 @@ sudo apt install $APT_FLAGS \
     openbox obconf lxappearance nitrogen feh \
     lxpolkit udiskie dunst picom sxhkd \
     xfce4-power-manager network-manager-gnome \
-    pulseaudio-utils xclip xdotool ddcutil flameshot \
-    lsblk pciutils coreutils grep sed awk
+    pulseaudio-utils    xclip build-essential curl wget git \
+    gawk util-linux \
+    feh i3lock sxhkd dmenu brightnessctl \
+grep sed awk
 
 # 2. Selectively Install Apps based on arguments
 install_if_requested() {

@@ -17,7 +17,8 @@ run() {
     local cmd=$1
     shift
     if command -v "$cmd" &> /dev/null; then
-        if ! pgrep -x "$cmd" > /dev/null; then
+        # Use -f (full command line) to avoid the 15-character name limit warning
+        if ! pgrep -f "$cmd" > /dev/null; then
             "$cmd" "$@" &
         fi
     fi
@@ -51,7 +52,7 @@ run udiskie -t
 module_enabled "sxhkd" && run sxhkd -c "$HOME/.config/sxhkd/sxhkdrc"
 module_enabled "dunst" && run dunst
 module_enabled "picom" && run picom -b
-module_enabled "mpd"   && run mpd
+module_enabled "mpd"   && { mkdir -p "$HOME/.mpd/playlists"; touch "$HOME/.mpd/database" "$HOME/.mpd/state"; run mpd; }
 
 # 4. Bar & Appearance
 # Note: Polybar usually needs its own launch script to handle multi-monitor
