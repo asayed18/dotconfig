@@ -13,8 +13,9 @@ mkdir -p "$WATCH_DIR"
 
 # Start the infinite monitor loop
 # We watch the directory to handle cases where the file is deleted/moved/overwritten
-inotifywait -m -e close_write "$WATCH_DIR" | while read -r directory events filename; do
+inotifywait -m -e close_write -e moved_to "$WATCH_DIR" | while read -r directory events filename; do
     if [ "$filename" == "desktop.png" ]; then
+        sleep 1 # Debounce to ensure file is fully written/moved
         echo "♻️  Desktop wallpaper detected change! Re-applying theme..."
         if [ -f "$SCRIPT_PATH" ]; then
             "$SCRIPT_PATH" "$WATCH_FILE"

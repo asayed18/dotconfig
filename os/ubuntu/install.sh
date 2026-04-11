@@ -73,10 +73,10 @@ install_if_requested "theme" "papirus-icon-theme" # Only if theme module is sele
 install_if_requested "wpg" ""
 
 # WPGTK & Pywal installation (requires pipx)
-if [[ "$MODULES_LIST" == *"wpg"* ]] && ! command -v wpg &> /dev/null; then
-    echo "📦 Installing Pywal and WPGTK via pipx..."
-    pipx install pywal --force
+if [[ "$MODULES_LIST" == *"wpg"* ]]; then
     pipx install wpgtk --force
+    pipx inject wpgtk haishoku  # Add better color extraction backend
+    touch "$HOME/.Xresources"   # Prevent xrdb errors
     export PATH="$HOME/.local/bin:$PATH"
 fi
 

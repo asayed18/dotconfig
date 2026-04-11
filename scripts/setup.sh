@@ -338,6 +338,7 @@ EOF
                 link_default "terminal" "terminal"
                 link_default "files" "files"
                 link_default "browser" "browser"
+                link_default "shell" "shell"
                 
                 # Link default editor
                 EDITOR_PATH=$(which nvim 2>/dev/null || which vim 2>/dev/null || which nano 2>/dev/null)

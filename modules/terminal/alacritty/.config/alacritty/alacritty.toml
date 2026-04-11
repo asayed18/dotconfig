@@ -54,6 +54,9 @@ magenta = "#bb9af7"
 cyan    = "#7dcfff"
 white   = "#c0caf5"
 
+[shell]
+program = "/home/ahmed/.local/bin/shell"
+
 # --- Keyboard Shortcuts ---
 [[keyboard.bindings]]
 action = "Paste"

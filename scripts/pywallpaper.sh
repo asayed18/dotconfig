@@ -22,24 +22,29 @@ wpg -a "$IMG_PATH"
 wpg -s "$(basename "$IMG_PATH")"
 
 # 2. Map templates to their actual config locations (if not already mapped)
-wpg -m polybar.base "$HOME/.config/polybar/colors.ini"
-wpg -m alacritty.base "$HOME/.config/alacritty/colors.toml"
-wpg -m rofi.base "$HOME/.config/rofi/colors.rasi"
-wpg -m qutebrowser.base "$HOME/.config/qutebrowser/colors.py"
+# Note: wpgtk requires --link for persistent template mapping
+wpg --link polybar.base "$HOME/.config/polybar/colors.ini"
+wpg --link alacritty.base "$HOME/.config/alacritty/colors.toml"
+wpg --link rofi.base "$HOME/.config/rofi/colors.rasi"
+wpg --link qutebrowser.base "$HOME/.config/qutebrowser/colors.py"
 
 # Firefox: Find the default-release profile (handling both standard and Snap paths)
 FF_PROFILE=$(find "$HOME/.mozilla/firefox" "$HOME/snap/firefox/common/.mozilla/firefox" -maxdepth 2 -type d -name "*.default-release" 2>/dev/null | head -n 1)
 if [ -n "$FF_PROFILE" ]; then
     mkdir -p "$FF_PROFILE/chrome"
-    wpg -m userChrome.css.base "$FF_PROFILE/chrome/userChrome.css"
+    wpg --link userChrome.css.base "$FF_PROFILE/chrome/userChrome.css"
 fi
 
-# 3. Reload the Desktop Environment and GTK settings
+# 3. Reload the Desktop Environment
 echo "🔥 Triggering Hot Reload..."
 # Refresh GTK theme (wpgtk usually handles this, but we force it)
 gsettings set org.gnome.desktop.interface gtk-theme "FlatColor" 2>/dev/null
 pkill -USR1 -x sxhkd
-~/projects/dotconfig/modules/system/autostart/.config/dotconfig/autostart.sh
 openbox --reconfigure
+
+# Reload bar and other services specifically without re-running full autostart
+if [ -f "$HOME/.config/polybar/launch.sh" ]; then
+    bash "$HOME/.config/polybar/launch.sh" &
+fi
 
 echo "✅ Theme applied successfully!"
