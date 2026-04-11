@@ -64,12 +64,24 @@ install_if_requested "git" "git"
 echo "Installing Themes & Fonts..."
 sudo apt install $APT_FLAGS \
     fonts-font-awesome fonts-noto-color-emoji \
+    arc-theme arc-icon-theme \
     python3-pip imagemagick bc
 
 # Modular theme choices
 install_if_requested "theme" "papirus-icon-theme" # Only if theme module is selected
 
 # 4. Third-Party / Script-based Installs
+# SF Pro / SF UI Font (required for Openbox Raven-Crimson theme)
+if ! fc-list | grep -qi "SF Pro" && ! fc-list | grep -qi "SF UI"; then
+    echo "Installing SF Pro fonts..."
+    mkdir -p "$HOME/.local/share/fonts/SFPro"
+    curl -fsSL -L "https://github.com/sahibjotsaggu/San-Francisco-Pro-Fonts/archive/refs/heads/master.zip" -o /tmp/sfpro.zip
+    unzip -qo /tmp/sfpro.zip -d /tmp/sfpro_extracted
+    cp /tmp/sfpro_extracted/San-Francisco-Pro-Fonts-master/*.otf "$HOME/.local/share/fonts/SFPro/"
+    rm -rf /tmp/sfpro.zip /tmp/sfpro_extracted
+    fc-cache -f "$HOME/.local/share/fonts/SFPro"
+fi
+
 # Oh-My-Zsh (non-interactive)
 if [[ "$MODULES_LIST" == *"zsh"* ]] && [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo "Installing Oh-My-Zsh..."
@@ -84,15 +96,24 @@ if ! command -v betterlockscreen &> /dev/null; then
     sudo chmod +x /usr/local/bin/betterlockscreen
 fi
 
-# Nerd Font fallback
+# --- Fonts ---
+# CodeNewRoman Nerd Font (used in Polybar, Rofi, Kitty)
 if ! fc-list | grep -qi "CodeNewRoman"; then
     echo "Installing CodeNewRoman Nerd Font..."
-    mkdir -p "$HOME/.local/share/fonts"
     curl -fsSL -L "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CodeNewRoman.zip" -o /tmp/font.zip
-    unzip -qo /tmp/font.zip -d "$HOME/.local/share/fonts"
+    unzip -qo /tmp/font.zip -d "$HOME/.local/share/fonts/CodeNewRoman"
     rm /tmp/font.zip
-    fc-cache -fv "$HOME/.local/share/fonts"
 fi
+
+# JetBrainsMono Nerd Font (used in Alacritty)
+if ! fc-list | grep -qi "JetBrainsMono"; then
+    echo "Installing JetBrainsMono Nerd Font..."
+    curl -fsSL -L "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip" -o /tmp/font.zip
+    unzip -qo /tmp/font.zip -d "$HOME/.local/share/fonts/JetBrainsMono"
+    rm /tmp/font.zip
+fi
+
+fc-cache -f "$HOME/.local/share/fonts"
 
 echo ""
 echo "✅ Lean Ubuntu setup sequence completed successfully!"
