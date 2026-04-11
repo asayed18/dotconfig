@@ -1,0 +1,21 @@
+/* userChrome.css.base - Firefox theming for wpgtk */
+:root {{
+  --bg-color: {color0};
+  --fg-color: {color7};
+  --accent-color: {color4};
+  --sec-color: {color2};
+}}
+
+#nav-bar, #TabsToolbar, #PersonalToolbar {{
+  background-color: var(--bg-color) !important;
+  color: var(--fg-color) !important;
+}}
+
+.tab-background[selected="true"] {{
+  background-color: var(--accent-color) !important;
+}}
+
+#urlbar-background {{
+  background-color: var(--bg-color) !important;
+  border: 1px solid var(--accent-color) !important;
+}}

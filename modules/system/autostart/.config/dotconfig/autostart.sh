@@ -74,3 +74,6 @@ fi
 
 # 5. User Overrides
 [ -f "$HOME/.config/dotconfig/autostart.local" ] && bash "$HOME/.config/dotconfig/autostart.local"
+
+# Wallpaper Auto-Hook Watcher
+~/projects/dotconfig/scripts/wallpaper-watcher.sh &

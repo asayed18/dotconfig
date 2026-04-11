@@ -279,6 +279,20 @@ EOF
                     fi
                 fi
 
+                # 7.6 Default Shell Configuration
+                SELECTED_SHELL="${CATEGORY_SELECTIONS[shell]}"
+                if [ -n "$SELECTED_SHELL" ]; then
+                    # We use which -a because sometimes shells are in /bin and /usr/bin
+                    SHELL_PATH=$(which "$SELECTED_SHELL" 2>/dev/null)
+                    if [ -n "$SHELL_PATH" ] && [ "$SHELL_PATH" != "$SHELL" ]; then
+                        if whiptail --title "Shell Configuration" --yesno "Would you like to set $SELECTED_SHELL as your default shell?" 10 60; then
+                            echo "🐚 Setting $SELECTED_SHELL as default shell..."
+                            # This will prompt for password in the terminal
+                            sudo chsh -s "$SHELL_PATH" "$USER"
+                        fi
+                    fi
+                fi
+
                 # Write Selections State (for Autostart and other tools)
                 echo "💾 Saving selection state..."
                 mkdir -p "$HOME/.config/dotconfig"

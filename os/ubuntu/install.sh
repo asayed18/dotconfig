@@ -19,7 +19,7 @@ sudo apt install $APT_FLAGS \
     lxpolkit udiskie dunst picom sxhkd \
     xfce4-power-manager network-manager-gnome \
     pulseaudio-utils    xclip build-essential curl wget git \
-    gawk util-linux \
+    gawk util-linux wmctrl xdotool inotify-tools \
     feh i3lock sxhkd dmenu brightnessctl \
 grep sed awk
 
@@ -71,6 +71,13 @@ sudo apt install $APT_FLAGS \
 
 # Modular theme choices
 install_if_requested "theme" "papirus-icon-theme" # Only if theme module is selected
+install_if_requested "wpg" "python3-pywal"
+
+# WPGTK installation (requires pip)
+if [[ "$MODULES_LIST" == *"wpg"* ]] && ! command -v wpg &> /dev/null; then
+    echo "📦 Installing WPGTK..."
+    pip3 install --user wpgtk
+fi
 
 # 4. Third-Party / Script-based Installs
 # SF Pro / SF UI Font (required for Openbox Raven-Crimson theme)
