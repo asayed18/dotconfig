@@ -176,11 +176,11 @@ ctrl + alt + l
 	# betterlockscreen -l
 
 ctrl + alt + q
-	loginctl suspend
+	systemctl suspend
 	# betterlockscreen -l
 
 ctrl + alt + Delete
-	loginctl reboot
+	systemctl reboot
 
 XF86AudioLowerVolume
 	pactl -- set-sink-volume 0 -10%

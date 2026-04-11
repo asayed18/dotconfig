@@ -254,7 +254,7 @@ Command will trigger installation (if opted-in) and symlinking.
                 clear
                 if [ "$DO_INSTALL" = true ]; then
                     echo "📦 Installing packages for $SELECTED_OS..."
-                    bash "$DOT_DIR/os/$SELECTED_OS/install.sh" "$FINAL_MODULES"
+                    bash "$DOT_DIR/os/$SELECTED_OS/install.sh" "$SELECTED_WM $FINAL_MODULES"
                     echo "✅ Package installation complete."
                 fi
                 
@@ -372,6 +372,15 @@ EOF
                 echo "Running orchestrator..."
                 make all OS="$SELECTED_OS" WM="$SELECTED_WM" MODULES="$FINAL_MODULES"
 
+                # 7b. Priming Theme (Initialize WPGTK library and colors.ini)
+                if command -v wpg &>/dev/null && [ -f "$HOME/Pictures/desktop.png" ]; then
+                    echo "🎨 Priming theme with default wallpaper..."
+                    # Check if wpg already has themes; if not, initialize
+                    if [ -z "$(wpg -l)" ]; then
+                        bash "$HOME/projects/dotconfig/scripts/pywallpaper.sh" "$HOME/Pictures/desktop.png"
+                    fi
+                fi
+
                 # 8. Hot Reload Desktop Environment
                 echo "🔥 Triggering Hot Reload..."
                 
@@ -380,6 +389,10 @@ EOF
                 pkill picom
                 pkill dunst
                 pkill -USR1 -x sxhkd || pkill sxhkd
+                
+                # Refresh Font Cache
+                echo "🔤 Refreshing font cache..."
+                fc-cache -f
                 
                 # Reload Window Manager
                 case "$SELECTED_WM" in

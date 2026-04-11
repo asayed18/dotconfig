@@ -66,11 +66,13 @@ fi
 
 # Apply Theme / Wallpaper
 if module_enabled "wpg"; then
-    # Only restore if a theme has been set previously
-    [ -f "$HOME/.config/wpg/.current" ] && wpg -rs &
+    # Only restore if wpg has themes in its library and a current theme exists
+    if [ -n "$(wpg -l 2>/dev/null)" ] && [ -f "$HOME/.config/wpg/.current" ]; then
+        wpg -r &
+    fi
 elif command -v feh &> /dev/null; then
-    # Fallback wallpaper if wpg isn't used
-    feh --bg-fill "$HOME/Pictures/desktop.png" &
+    # Fallback wallpaper if wpg isn't used or ready
+    [ -f "$HOME/Pictures/desktop.png" ] && feh --bg-fill "$HOME/Pictures/desktop.png" &
 fi
 
 # 5. User Overrides

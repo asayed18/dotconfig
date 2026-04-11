@@ -15,12 +15,12 @@ echo "Modules selected: $MODULES_LIST"
 echo "Installing Core Foundations..."
 sudo apt update
 sudo apt install $APT_FLAGS \
-    openbox obconf lxappearance nitrogen feh \
+    lxappearance nitrogen feh \
     lxpolkit udiskie dunst picom sxhkd \
     xfce4-power-manager network-manager-gnome \
     pulseaudio-utils    xclip build-essential curl wget git \
     gawk util-linux wmctrl xdotool inotify-tools \
-    feh i3lock sxhkd dmenu brightnessctl \
+    feh i3lock sxhkd dmenu brightnessctl fonts-noto-color-emoji
 
 # 2. Selectively Install Apps based on arguments
 install_if_requested() {
@@ -36,6 +36,11 @@ install_if_requested() {
 # --- Terminals ---
 install_if_requested "alacritty" "alacritty"
 install_if_requested "kitty" "kitty"
+
+# --- Window Managers ---
+install_if_requested "openbox" "openbox obconf"
+install_if_requested "bspwm" "bspwm sxhkd"
+install_if_requested "i3" "i3-wm i3status i3lock"
 
 # --- Shells ---
 install_if_requested "zsh" "zsh"
@@ -110,6 +115,7 @@ fi
 # CodeNewRoman Nerd Font (used in Polybar, Rofi, Kitty)
 if ! fc-list | grep -qi "CodeNewRoman"; then
     echo "Installing CodeNewRoman Nerd Font..."
+    mkdir -p "$HOME/.local/share/fonts/CodeNewRoman"
     curl -fsSL -L "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CodeNewRoman.zip" -o /tmp/font.zip
     unzip -qo /tmp/font.zip -d "$HOME/.local/share/fonts/CodeNewRoman"
     rm /tmp/font.zip
@@ -118,12 +124,30 @@ fi
 # JetBrainsMono Nerd Font (used in Alacritty)
 if ! fc-list | grep -qi "JetBrainsMono"; then
     echo "Installing JetBrainsMono Nerd Font..."
+    mkdir -p "$HOME/.local/share/fonts/JetBrainsMono"
     curl -fsSL -L "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip" -o /tmp/font.zip
     unzip -qo /tmp/font.zip -d "$HOME/.local/share/fonts/JetBrainsMono"
     rm /tmp/font.zip
 fi
 
+# Symbols Nerd Font (The 'Gold Standard' for icons)
+if ! fc-list | grep -qi "Symbols Nerd Font"; then
+    echo "Installing Symbols Nerd Font..."
+    mkdir -p "$HOME/.local/share/fonts/SymbolsNerdFont"
+    curl -fsSL -L "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip" -o /tmp/font.zip
+    unzip -qo /tmp/font.zip -d "$HOME/.local/share/fonts/SymbolsNerdFont"
+    rm /tmp/font.zip
+fi
+
 fc-cache -f "$HOME/.local/share/fonts"
+
+# Ensure default wallpaper exists for priming
+mkdir -p "$HOME/Pictures"
+if [ ! -f "$HOME/Pictures/desktop.png" ]; then
+    echo "🖼️ No desktop.png found. Creating a placeholder..."
+    # Copy a system wallpaper if available, otherwise just warn
+    [ -f "/usr/share/backgrounds/warty-final-ubuntu.png" ] && cp "/usr/share/backgrounds/warty-final-ubuntu.png" "$HOME/Pictures/desktop.png"
+fi
 
 echo ""
 echo "✅ Lean Ubuntu setup sequence completed successfully!"

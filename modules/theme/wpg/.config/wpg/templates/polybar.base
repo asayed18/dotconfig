@@ -4,6 +4,7 @@ foreground = {color7}
 primary = {color4}
 secondary = {color2}
 alert = {color1}
+foreground-alt = {color8}
 
 active-wrapper = {color4}
 inactive-wrapper = {color8}

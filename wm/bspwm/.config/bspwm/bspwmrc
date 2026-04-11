@@ -42,12 +42,12 @@ nm-applet &  disown
 mpd & disown
 dunst & disown
 pgrep -x "xfce-polkit" > /dev/null && echo "POLKIT RUNNING" || /usr/libexec/xfce-polkit & disown ;
-wpg -s $( realpath /home/void/.config/wpg/.current) & disown
+wpg -s $( realpath $HOME/.config/wpg/.current) & disown
 # /usr/bin/emacs --daemon &  disown
 # gamemoded & disown
-# /home/void/.config/wal/launch.sh /usr/share/void-artwork/desktop.png &
+# $HOME/.config/wal/launch.sh /usr/share/void-artwork/desktop.png &
 # albert &
-# /home/void/.config/bspwm/bspwm_colors.sh &bash /home/void/.config/bspwm/bspwm_colors.sh &  disown
+# $HOME/.config/bspwm/bspwm_colors.sh &bash $HOME/.config/bspwm/bspwm_colors.sh &  disown
 
 
 
