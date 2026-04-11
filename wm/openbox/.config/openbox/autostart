@@ -1,0 +1,11 @@
+# Openbox Autostart Script
+# This WM now uses the Unified Dotconfig Autostart system
+
+# Launch the unified master script
+if [ -f "$HOME/.config/dotconfig/autostart.sh" ]; then
+    bash "$HOME/.config/dotconfig/autostart.sh" &
+else
+    # Fallback to basic services if unified script is missing
+    nm-applet &
+    feh --bg-fill "$HOME/Pictures/desktop.png" &
+fi

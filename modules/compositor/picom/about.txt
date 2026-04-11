@@ -1,0 +1,1 @@
+Picom: X11 compositor for transparency/shadows

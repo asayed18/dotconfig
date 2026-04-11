@@ -1,0 +1,1 @@
+Qutebrowser: Keyboard-focused web browser (Vim-like)

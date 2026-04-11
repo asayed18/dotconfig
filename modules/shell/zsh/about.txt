@@ -1,0 +1,1 @@
+ZSH: Powerful shell with great plugin support

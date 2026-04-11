@@ -1,0 +1,1 @@
+Global Version Control System (Git) configuration with interactive setup.

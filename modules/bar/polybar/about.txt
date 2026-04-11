@@ -1,0 +1,1 @@
+Polybar: Highly customizable status bar

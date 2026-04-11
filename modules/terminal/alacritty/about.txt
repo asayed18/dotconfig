@@ -1,0 +1,1 @@
+Alacritty: GPU-accelerated terminal emulator

@@ -1,0 +1,1 @@
+Rofi: Window switcher and application launcher

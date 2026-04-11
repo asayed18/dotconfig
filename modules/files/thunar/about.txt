@@ -1,0 +1,1 @@
+Thunar: Lightweight and fast file manager for Xfce

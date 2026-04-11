@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Keyboard Cheatsheet
+Comment=Show keyboard shortcuts for sxhkd
+Exec=/home/ahmed/projects/dotconfig/scripts/cheatsheet.sh
+Icon=help-about
+Terminal=false
+Type=Application
+Categories=System;Utility;
+Keywords=cheatsheet;shortcuts;help;
