@@ -342,6 +342,30 @@ EOF
 
                 echo "Running orchestrator..."
                 make all OS="$SELECTED_OS" WM="$SELECTED_WM" MODULES="$FINAL_MODULES"
+
+                # 8. Hot Reload Desktop Environment
+                echo "🔥 Triggering Hot Reload..."
+                
+                # Restart major UI services
+                pkill polybar
+                pkill picom
+                pkill dunst
+                pkill -USR1 -x sxhkd || pkill sxhkd
+                
+                # Reload Window Manager
+                case "$SELECTED_WM" in
+                    openbox) openbox --reconfigure ;;
+                    i3) i3-msg reload ;;
+                    bspwm) bspc wm -r ;;
+                esac
+                
+                # Re-run autostart
+                if [ -f "$HOME/.config/dotconfig/autostart.sh" ]; then
+                    echo "🚀 Relaunching autostart services..."
+                    bash "$HOME/.config/dotconfig/autostart.sh" &
+                fi
+
+                echo "✅ Setup and Hot Reload complete!"
                 exit 0
             else
                 STEP=6
