@@ -21,7 +21,6 @@ sudo apt install $APT_FLAGS \
     pulseaudio-utils    xclip build-essential curl wget git \
     gawk util-linux wmctrl xdotool inotify-tools \
     feh i3lock sxhkd dmenu brightnessctl \
-grep sed awk
 
 # 2. Selectively Install Apps based on arguments
 install_if_requested() {

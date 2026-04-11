@@ -4,9 +4,9 @@
     
     ### Dimensions and Position ###
     width = 300
-    height = 500
+    height = (0, 500)
     origin = top-right
-    offset = 30x50
+    offset = (30, 50)
     
     ### Progress Bar ###
     progress_bar = true

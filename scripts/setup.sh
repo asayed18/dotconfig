@@ -354,7 +354,7 @@ EOF
                     local mime=$1
                     local app=$2
                     # Remove existing entries for this mime type using # as delimiter
-                    sed -i "|\#$mime|d" "$XDG_MIME"
+                    sed -i "\#$mime#d" "$XDG_MIME"
                     # Add new entry
                     if [ -n "$app" ]; then
                         echo "$mime=$app.desktop" >> "$XDG_MIME"

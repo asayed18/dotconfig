@@ -196,7 +196,7 @@ super + bracketleft
 	ddcutil setvcp 10 - 10
 super + bracketright
 	ddcutil setvcp 10 + 10
-Print
+{Print,super + shift + s}
 	flameshot gui
 
 # PyWallpaper Theme Selection
