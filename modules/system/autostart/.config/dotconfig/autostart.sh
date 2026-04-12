@@ -1,79 +1,119 @@
 #!/usr/bin/env bash
-# Unified Master Autostart Script
+# Unified Master Autostart Script (v2: Reliable Edition)
 
-# 1. Load Selections & Environment
+# 1. Environment & Logging
+export PATH="$HOME/.local/bin:$PATH"
+LOG_DIR="$HOME/.cache/dotconfig"
+LOG_FILE="$LOG_DIR/autostart.log"
+
+mkdir -p "$LOG_DIR"
+exec > >(tee -i "$LOG_FILE") 2>&1
+
+echo "--- Start: $(date) ---"
+echo "🖥️ Current Display: $DISPLAY"
+
+# Load Selections
 STATE_FILE="$HOME/.config/dotconfig/state.sh"
-[ -f "$STATE_FILE" ] && . "$STATE_FILE"
+if [ -f "$STATE_FILE" ]; then
+    . "$STATE_FILE"
+    echo "✅ Loaded system state ($SELECTED_OS / $SELECTED_WM)"
+else
+    echo "⚠️ Warning: System state not found at $STATE_FILE"
+fi
 
-# Helper to check if a module is enabled
+# Helper functions
 module_enabled() {
-    local mod=$1
-    [[ "$SELECTED_MODULES" == *"$mod"* ]] && return 0
+    [[ "$SELECTED_MODULES" == *"$1"* ]] && return 0
     return 1
 }
 
-# Helper to run a tool only if it exists and isn't already running
 run() {
     local cmd=$1
     shift
     if command -v "$cmd" &> /dev/null; then
-        # Use -f (full command line) to avoid the 15-character name limit warning
         if ! pgrep -f "$cmd" > /dev/null; then
+            echo "🚀 Launching: $cmd $@"
             "$cmd" "$@" &
         fi
+    else
+        echo "❌ Error: Command not found - $cmd"
     fi
 }
 
-# 2. System Services (OS-Aware)
-echo "🚀 Starting Unified Autostart for $SELECTED_OS..."
+# 2. Base Services (Always needed)
+echo "🔧 Initializing core services..."
+
+# GPU & Display Resync (Essential for NVIDIA Resume)
+echo "🔄 Resetting GPU synchronization..."
+xset dpms force on
+xrandr --auto
+sleep 0.5 
 
 # Polkit Authentication Agent
-# Searches common paths for both Ubuntu/Debian and Arch
 POLKIT_PATHS=(
-    "/usr/bin/lxpolkit"                                     # Ubuntu/Debian
-    "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1" # Arch
-    "/usr/libexec/xfce-polkit"                              # Fallback
+    "/usr/bin/lxpolkit"
+    "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+    "/usr/libexec/xfce-polkit"
     "/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1"
 )
 
 for p in "${POLKIT_PATHS[@]}"; do
     if [ -f "$p" ]; then
+        echo "🛡️ Starting Polkit: $p"
         "$p" &
         break
     fi
 done
 
-# Hardware & Connectivity
 run nm-applet
 run xfce4-power-manager --daemon
 run udiskie -t
+# Automatic lock on sleep/idle
+run xss-lock --transfer-sleep-lock -- betterlockscreen -l dimblur
 
-# 3. Modular App Services
+# 3. Modular App Services (Conditional)
 module_enabled "sxhkd" && run sxhkd -c "$HOME/.config/sxhkd/sxhkdrc"
 module_enabled "dunst" && run dunst
 module_enabled "picom" && run picom -b
-module_enabled "mpd"   && { mkdir -p "$HOME/.mpd/playlists"; touch "$HOME/.mpd/database1" "$HOME/.mpd/state"; run mpd; }
+module_enabled "mpd"   && run mpd
 
-# 4. Bar & Appearance
-# Note: Polybar usually needs its own launch script to handle multi-monitor
+# 4. Bar & Interface
 if module_enabled "polybar"; then
-    if [ -f "$HOME/.config/polybar/launch.sh" ]; then
-        bash "$HOME/.config/polybar/launch.sh" &
+    LAUNCH_SCRIPT="$HOME/.config/polybar/launch.sh"
+    if [ -f "$LAUNCH_SCRIPT" ]; then
+        echo "📊 Launching Polybar via script..."
+        bash "$LAUNCH_SCRIPT" &
     else
-        run polybar
+        run polybar example
     fi
 fi
 
-# Apply Theme / Wallpaper
-if module_enabled "wpg"; then
-    # Only restore if wpg has themes in its library and a current theme exists
-    if [ -n "$(wpg -l 2>/dev/null)" ] && [ -f "$HOME/.config/wpg/.current" ]; then
-        wpg -r &
+# 5. Robust Theme & Wallpaper Logic
+apply_wallpaper() {
+    echo "🎨 Applying background..."
+    
+    # Try wpgtk first if enabled
+    if module_enabled "theme/wpg" && command -v wpg &>/dev/null; then
+        if [ -n "$(wpg -l 2>/dev/null)" ] && [ -f "$HOME/.config/wpg/.current" ]; then
+            echo "✨ Restoring wpgtk theme..."
+            wpg -r &
+        fi
     fi
-elif command -v feh &> /dev/null; then
-    # Fallback wallpaper if wpg isn't used or ready
-    [ -f "$HOME/Pictures/desktop.png" ] && feh --bg-fill "$HOME/Pictures/desktop.png" &
-fi
 
-# 5. User Overrides
-[ -f "$HOME/.config/dotconfig/autostart.local" ] && bash "$HOME/.config/dotconfig/autostart.local"
+    # Fallback to feh if wpg fails or is disabled
+    # We always run this as a secondary safety to ensure no black screen
+    if command -v feh &> /dev/null; then
+        local WP_PATH="$HOME/Pictures/desktop.png"
+        if [ -f "$WP_PATH" ]; then
+            echo "🖼️ Falling back to feh for $WP_PATH"
+            feh --bg-fill "$WP_PATH" &
+        fi
+    fi
+}
+
+apply_wallpaper
+
+# 6. Local Overrides
+[ -f "$HOME/.config/dotconfig/autostart.local" ] && . "$HOME/.config/dotconfig/autostart.local"
+
+echo "--- Finished: $(date) ---"

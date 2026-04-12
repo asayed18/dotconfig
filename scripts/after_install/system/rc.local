@@ -7,8 +7,8 @@
 
 ldmtool create all
 
-mount  /dev/mapper/ldm_vol_WIN-QNAAPOCLICF-Dg0_Volume1  /home/void/drives/#3_Others   -o rw,user,exec,locale=en_US.utf8,umask=000,uid=1000,gid=1000 -t ntfs
-mount /dev/mapper/ldm_vol_WIN-QNAAPOCLICF-Dg0_Volume3   /home/void/drives/#3_Store   -o rw,user,exec,locale=en_US.utf8,umask=000,uid=1000,gid=1000 -t ntfs
-mount  /dev/mapper/ldm_vol_WIN-QNAAPOCLICF-Dg0_Volume2   /home/void/drives/#3_Games  -o rw,user,exec,locale=en_US.utf8,umask=000,uid=1000,gid=1000 -t ntfs
+mount  /dev/mapper/ldm_vol_WIN-QNAAPOCLICF-Dg0_Volume1  /home/ahmed/drives/#3_Others   -o rw,user,exec,locale=en_US.utf8,umask=000,uid=1000,gid=1000 -t ntfs
+mount /dev/mapper/ldm_vol_WIN-QNAAPOCLICF-Dg0_Volume3   /home/ahmed/drives/#3_Store   -o rw,user,exec,locale=en_US.utf8,umask=000,uid=1000,gid=1000 -t ntfs
+mount  /dev/mapper/ldm_vol_WIN-QNAAPOCLICF-Dg0_Volume2   /home/ahmed/drives/#3_Games  -o rw,user,exec,locale=en_US.utf8,umask=000,uid=1000,gid=1000 -t ntfs
 
 exit 0

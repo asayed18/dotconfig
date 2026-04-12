@@ -12,13 +12,13 @@ set $border_width 3
 # smart_gaps on
 smart_borders on
 # Startup programs
-exec_always --no-startup-id /home/void/.config/polybar/launch.sh
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec --no-startup-id xfce4-power-manager --daemon
 exec --no-startup-id nm-applet
 exec --no-startup-id mpd
 exec --no-startup-id dunst
 exec --no-startup-id /usr/libexec/xfce-polkit
-exec --no-startup-id wpg -s $( realpath /home/void/.config/wpg/.current)
+exec --no-startup-id wpg -s $( realpath $HOME/.config/wpg/.current)
 
 # Name the workspaces
 set $workspace1 ""

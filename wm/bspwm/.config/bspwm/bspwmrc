@@ -3,7 +3,7 @@ bspc rule -r  "*"
 
 pgrep -x sxhkd > /dev/null || sxhkd &
 
-bspc monitor -d     嗢  -
+bspc monitor -d 󰌢 󰈹 󰨞 󰈙 󰓇 󰊴 -
 
 bspc config border_width  2 
 #. "${HOME}/.cache/wal/colors.sh"
@@ -11,6 +11,18 @@ if [[ -f "${HOME}/.config/bspwm/bspwm_colors.sh" ]]
 then
     . "${HOME}/.config/bspwm/bspwm_colors.sh"
 fi
+
+# Manually load Xresources to bypass system scope issues (has_option errors)
+[ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources" &
+
+# Load Selections & Helpers
+STATE_FILE="$HOME/.config/dotconfig/state.sh"
+[ -f "$STATE_FILE" ] && . "$STATE_FILE"
+
+module_enabled() {
+    [[ "$SELECTED_MODULES" == *"$1"* ]] && return 0
+    return 1
+}
 
 # bspc config focus_follows_pointer true
 bspc config top_padding        30
@@ -25,29 +37,18 @@ bspc config normal_border_color "#242410"
 bspc config split_ratio          0.53
 bspc config borderless_monocle   true
 bspc config gapless_monocle      true
-bspc config border_radius 35
+# border_radius is NOT a bspc setting — handled by picom's corner-radius
 
 bspc config pointer_motion_interval 20
 bspc config pointer_modifier mod4
 bspc config pointer_action1 move
 bspc config pointer_action2 resize_side
-bspc config pointer_action2 resize_corner
+bspc config pointer_action3 resize_corner
 
 
-#AutoStart
-$HOME/.config/polybar/launch.sh & disown
-setxkbmap -option grp:alt_space_toggle us,ar &
-#xfce4-power-manager --daemon &  disown
-nm-applet &  disown
-mpd & disown
-dunst & disown
-pgrep -x "xfce-polkit" > /dev/null && echo "POLKIT RUNNING" || /usr/libexec/xfce-polkit & disown ;
-wpg -s $( realpath $HOME/.config/wpg/.current) & disown
-# /usr/bin/emacs --daemon &  disown
-# gamemoded & disown
-# $HOME/.config/wal/launch.sh /usr/share/void-artwork/desktop.png &
-# albert &
-# $HOME/.config/bspwm/bspwm_colors.sh &bash $HOME/.config/bspwm/bspwm_colors.sh &  disown
+# AutoStart (Unified System)
+# Calls ~/.config/dotconfig/autostart.sh which handles sxhkd, dunst, wallpaper, etc.
+[ -f "$HOME/.config/bspwm/autostart" ] && "$HOME/.config/bspwm/autostart" & disown
 
 
 
@@ -86,8 +87,7 @@ bspc rule -a mplayer2 state=floating
 bspc rule -a Screenkey manage=off
 bspc rule -a Kupfer.py focus=on
 
-#AutoStart
-#. "./autostart" & disown
+ # End of configuration
 
 
 # remove border from un-focused windows

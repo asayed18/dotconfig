@@ -18,11 +18,14 @@ module_enabled() {
 }
 
 if [ -z "$1" ]; then
-    echo "Usage: pywallpaper <image_path>"
-    exit 1
+    SELECTION=$(find "$HOME/Pictures" -type f | rofi -dmenu -p 'Select Wallpaper')
+    if [ -z "$SELECTION" ]; then
+        exit 0
+    fi
+    IMG_PATH=$(realpath "$SELECTION")
+else
+    IMG_PATH=$(realpath "$1")
 fi
-
-IMG_PATH=$(realpath "$1")
 
 if [ ! -f "$IMG_PATH" ]; then
     echo "Error: Image not found at $IMG_PATH"
@@ -63,6 +66,8 @@ if module_enabled "qutebrowser"; then
     ln -sf "$HOME/.config/wpg/templates/qutebrowser" "$HOME/.config/qutebrowser/colors.py"
 fi
 
+
+
 # Firefox
 if module_enabled "firefox"; then
     FF_PROFILE=$(find "$HOME/.mozilla/firefox" "$HOME/snap/firefox/common/.mozilla/firefox" -maxdepth 2 -type d -name "*.default-release" 2>/dev/null | head -n 1)
@@ -77,6 +82,9 @@ echo "🔥 Triggering Hot Reload..."
 
 # Refresh GTK theme
 gsettings set org.gnome.desktop.interface gtk-theme "FlatColor" 2>/dev/null
+ln -sf "$HOME/.config/wpg/templates/gtk2" "$HOME/.gtkrc-2.0"
+mkdir -p "$HOME/.config/gtk-3.0"
+ln -sf "$HOME/.config/wpg/templates/gtk3.0" "$HOME/.config/gtk-3.0/gtk.css"
 
 # Hot-reload keybindings
 module_enabled "sxhkd" && pkill -USR1 -x sxhkd

@@ -2,18 +2,18 @@
 
 # please change user name if needed
 
-mkdir /home/void/drives
-mkdir /home/void/drives/#1_Games1
-mkdir /home/void/drives/#1_Games2
-mkdir /home/void/drives/#1_Games3
-mkdir /home/void/drives/#2_Games4
-mkdir /home/void/drives/#2_Local
-mkdir /home/void/drives/#2_SPLITVOL
-mkdir /home/void/drives/#3_Games
-mkdir /home/void/drives/#3_Others
-mkdir /home/void/drives/#3_Store
-mkdir /home/void/drives/#nvme
-mkdir /home/void/drives/#ssd
+mkdir $HOME/drives
+mkdir $HOME/drives/#1_Games1
+mkdir $HOME/drives/#1_Games2
+mkdir $HOME/drives/#1_Games3
+mkdir $HOME/drives/#2_Games4
+mkdir $HOME/drives/#2_Local
+mkdir $HOME/drives/#2_SPLITVOL
+mkdir $HOME/drives/#3_Games
+mkdir $HOME/drives/#3_Others
+mkdir $HOME/drives/#3_Store
+mkdir $HOME/drives/#nvme
+mkdir $HOME/drives/#ssd
 sudo cp fstab /etc/fstab
 sudo cp rc.local /etc/rc.local
 sudo cp environment /etc/environment

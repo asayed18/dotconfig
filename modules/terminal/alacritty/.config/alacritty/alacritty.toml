@@ -10,10 +10,10 @@ class = { instance = "Alacritty", general = "Alacritty" }
 
 # --- Font Settings ---
 [font]
-# I recommend 'JetBrainsMono Nerd Font' for icons/ligatures
-normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
-bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
-italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+# I recommend 'JetBrainsMono Nerd Font Mono' for proper terminal spacing
+normal = { family = "JetBrainsMono Nerd Font Mono", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font Mono", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font Mono", style = "Italic" }
 size = 12.0
 
 [font.offset]

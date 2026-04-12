@@ -83,8 +83,8 @@ super + {p,b,comma,period}
 # focus the next/previous window in the current desktop
 # super + {_,shift + }c
 # 	/home/ahmed/projects/dotconfig/scripts/wm-run.sh node -f {next,prev}.local.!hidden.window
-super + {Right,Left, Up, Down }
-	/home/ahmed/projects/dotconfig/scripts/wm-run.sh node -f {east, west, north, south}.local.!hidden.window
+super + {Right,Left,Up,Down}
+	/home/ahmed/projects/dotconfig/scripts/wm-run.sh node -f {east,west,north,south}.local.!hidden.window
 
 # focus the next/previous desktop in the current monitor
 super + bracket{left,right}
@@ -201,4 +201,4 @@ super + bracketright
 
 # PyWallpaper Theme Selection
 super + alt + w
-	~/projects/dotconfig/scripts/pywallpaper.sh "$(find ~/Pictures -type f | rofi -dmenu -p 'Select Wallpaper')"
+	$HOME/projects/dotconfig/scripts/pywallpaper.sh

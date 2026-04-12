@@ -5,16 +5,7 @@
 export TERM=xterm-256color # Enable mouse support features in many terminals
 
 # 1. High-Contrast Theming
-export NEWT_COLORS='
-  window=white,black
-  border=white,black
-  textbox=white,black
-  button=black,white
-  listbox=white,black
-  actlistbox=black,white
-  title=white,black
-  root=black,black
-'
+export NEWT_COLORS='root=white,black:window=white,black:border=cyan,black:shadow=black,black:title=magenta,black:button=white,black:actbutton=black,cyan:compactbutton=white,black:checkbox=white,black:actcheckbox=black,cyan:entry=black,white:disentry=white,black:label=white,black:listbox=white,black:actlistbox=black,cyan:sellistbox=white,black:actsellistbox=black,cyan:textbox=white,black:acttextbox=black,cyan:helpline=white,black:roottext=white,black'
 
 # Ensure whiptail is available
 if ! command -v whiptail &> /dev/null; then
@@ -368,6 +359,11 @@ EOF
                     update_mime_entry "x-scheme-handler/https" "${CATEGORY_SELECTIONS[browser]}"
                     update_mime_entry "text/html" "${CATEGORY_SELECTIONS[browser]}"
                 }
+
+                # Enable Resume Hook (Sleep logic)
+                echo "🌙 Configuring Sleep/Wake Synchronization..."
+                systemctl --user daemon-reload || true
+                systemctl --user enable resume-wallpaper.service || true
 
                 echo "Running orchestrator..."
                 make all OS="$SELECTED_OS" WM="$SELECTED_WM" MODULES="$FINAL_MODULES"

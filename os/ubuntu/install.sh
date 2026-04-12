@@ -16,11 +16,19 @@ echo "Installing Core Foundations..."
 sudo apt update
 sudo apt install $APT_FLAGS \
     lxappearance nitrogen feh \
-    lxpolkit udiskie dunst picom sxhkd \
+    lxpolkit udiskie dunst picom sxhkd xss-lock \
     xfce4-power-manager network-manager-gnome \
     pulseaudio-utils    xclip build-essential curl wget git \
     gawk util-linux wmctrl xdotool inotify-tools \
     feh i3lock sxhkd dmenu brightnessctl fonts-noto-color-emoji
+
+# 1a. NVIDIA Optimizations (Fix black screen on resume)
+if lspci | grep -qi "NVIDIA"; then
+    echo "🏎️ NVIDIA GPU detected. Applying Suspend/Resume optimizations..."
+    echo "options nvidia NVreg_PreserveVideoMemoryAllocations=1 NVreg_TemporaryFilePath=/var/tmp" | sudo tee /etc/modprobe.d/nvidia-power-management.conf
+    # Ensure NVIDIA services are enabled
+    sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service || true
+fi
 
 # 2. Selectively Install Apps based on arguments
 install_if_requested() {

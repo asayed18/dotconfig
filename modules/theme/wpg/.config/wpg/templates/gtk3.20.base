@@ -80,6 +80,7 @@
 @define-color wm_border_focused @border_color;
 @define-color wm_border_unfocused @border_color;
 
+/*
 @import url("gtk-widgets.css");
 @import url("unity.css");
 @import url("widgets/button.css");
@@ -106,3 +107,4 @@
 @import url("widgets/csd.css");
 @import url("widgets/combobox.css");
 @import url("widgets/selection-mode.css");
+*/
