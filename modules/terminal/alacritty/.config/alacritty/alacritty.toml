@@ -1,4 +1,7 @@
 # --- Window Settings ---
+[general]
+import = ["~/.config/alacritty/colors.toml"]
+
 [window]
 padding = { x = 12, y = 12 }
 dynamic_padding = true
@@ -30,29 +33,7 @@ thickness = 0.15
 hide_when_typing = true
 
 # --- Colors (Tokyo Night Theme) ---
-[colors.primary]
-background = "#1a1b26"
-foreground = "#c0caf5"
-
-[colors.normal]
-black   = "#15161e"
-red     = "#f7768e"
-green   = "#9ece6a"
-yellow  = "#e0af68"
-blue    = "#7aa2f7"
-magenta = "#bb9af7"
-cyan    = "#7dcfff"
-white   = "#a9b1d6"
-
-[colors.bright]
-black   = "#414868"
-red     = "#f7768e"
-green   = "#9ece6a"
-yellow  = "#e0af68"
-blue    = "#7aa2f7"
-magenta = "#bb9af7"
-cyan    = "#7dcfff"
-white   = "#c0caf5"
+# --- End of Config ---
 
 [terminal.shell]
 program = "/home/ahmed/.local/bin/shell"

@@ -3,6 +3,13 @@
 envFile=~/.config/polybar/scripts/env.sh
 changeValue=300
 
+# Ensure env file exists and is sourced
+if [ ! -f "$envFile" ]; then
+  echo "REDSHIFT=off" > "$envFile"
+  echo "REDSHIFT_TEMP=5600" >> "$envFile"
+fi
+. "$envFile"
+
 changeMode() {
   sed -i "s/REDSHIFT=$1/REDSHIFT=$2/g" $envFile 
   REDSHIFT=$2

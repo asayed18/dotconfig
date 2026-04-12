@@ -11,78 +11,84 @@ MODULES_LIST="$@"
 echo "🛠️ Starting LEAN installation for Ubuntu..."
 echo "Modules selected: $MODULES_LIST"
 
-# 1. Base Foundations (Minimal requirements for the DE to even start)
-echo "Installing Core Foundations..."
-sudo apt update
-sudo apt install $APT_FLAGS \
-    lxappearance nitrogen feh \
-    lxpolkit udiskie dunst picom sxhkd xss-lock \
-    xfce4-power-manager network-manager-gnome \
-    pulseaudio-utils    xclip build-essential curl wget git \
-    gawk util-linux wmctrl xdotool inotify-tools \
-    feh i3lock sxhkd dmenu brightnessctl fonts-noto-color-emoji
+# 1. Base Foundations
+echo "📝 Assembling Package Queue..."
+PKG_QUEUE="lxappearance nitrogen feh lxpolkit udiskie dunst picom sxhkd xss-lock \
+    xfce4-power-manager network-manager-gnome pulseaudio-utils xclip build-essential \
+    curl wget git gawk util-linux wmctrl xdotool inotify-tools i3lock dmenu \
+    brightnessctl redshift fonts-noto-color-emoji fonts-font-awesome arc-theme \
+    python3-pip pipx imagemagick bc"
 
-# 1a. NVIDIA Optimizations (Fix black screen on resume)
+DO_NVIDIA_FIX=false
+# 1a. NVIDIA Check
 if lspci | grep -qi "NVIDIA"; then
-    echo "🏎️ NVIDIA GPU detected. Applying Suspend/Resume optimizations..."
-    echo "options nvidia NVreg_PreserveVideoMemoryAllocations=1 NVreg_TemporaryFilePath=/var/tmp" | sudo tee /etc/modprobe.d/nvidia-power-management.conf
-    # Ensure NVIDIA services are enabled
-    sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service || true
+    echo "🏎️ NVIDIA GPU detected. Queueing recovery optimizations..."
+    DO_NVIDIA_FIX=true
 fi
 
 # 2. Selectively Install Apps based on arguments
-install_if_requested() {
+add_to_queue() {
     local mod_name=$1
     shift
     local pkg_name="$@"
     if [[ "$MODULES_LIST" == *"$mod_name"* ]]; then
-        echo "📦 Installing selected module: $mod_name..."
-        sudo apt install $APT_FLAGS $pkg_name
+        echo "📦 Adding module to queue: $mod_name..."
+        PKG_QUEUE+=" $pkg_name"
     fi
 }
 
 # --- Terminals ---
-install_if_requested "alacritty" "alacritty"
-install_if_requested "kitty" "kitty"
+add_to_queue "alacritty" "alacritty"
+add_to_queue "kitty" "kitty"
 
 # --- Window Managers ---
-install_if_requested "openbox" "openbox obconf"
-install_if_requested "bspwm" "bspwm sxhkd"
-install_if_requested "i3" "i3-wm i3status i3lock"
+add_to_queue "openbox" "openbox obconf"
+add_to_queue "bspwm" "bspwm sxhkd"
+add_to_queue "i3" "i3-wm i3status i3lock"
 
 # --- Shells ---
-install_if_requested "zsh" "zsh"
-install_if_requested "fish" "fish"
+add_to_queue "zsh" "zsh"
+add_to_queue "fish" "fish"
 
 # --- File Managers ---
-install_if_requested "thunar" "thunar"
-install_if_requested "pcmanfm" "pcmanfm"
+add_to_queue "thunar" "thunar"
+add_to_queue "pcmanfm" "pcmanfm"
 
 # --- Browsers ---
-install_if_requested "qutebrowser" "qutebrowser"
-install_if_requested "firefox" "firefox"
+add_to_queue "qutebrowser" "qutebrowser"
+add_to_queue "firefox" "firefox"
 
 # --- System Components (Polybar / Rofi) ---
-install_if_requested "polybar" "polybar"
-install_if_requested "rofi" "rofi"
+add_to_queue "polybar" "polybar"
+add_to_queue "rofi" "rofi"
 
 # --- Media ---
-install_if_requested "mpv" "mpv"
-install_if_requested "mpd" "mpd"
-install_if_requested "ncmpcpp" "ncmpcpp"
+add_to_queue "mpv" "mpv"
+add_to_queue "mpd" "mpd"
+add_to_queue "ncmpcpp" "ncmpcpp"
 
 # --- VCS ---
-install_if_requested "git" "git"
+add_to_queue "git" "git"
 
-# 3. Themes & Fonts (Required for the design but handled carefully)
-echo "Installing Themes & Fonts..."
-sudo apt install $APT_FLAGS \
-    fonts-font-awesome fonts-noto-color-emoji \
-    arc-theme \
-    python3-pip pipx imagemagick bc
+# --- Services ---
+add_to_queue "redshift" "redshift"
 
-# Modular theme choices
-install_if_requested "theme" "papirus-icon-theme" # Only if theme module is selected
+# --- Themes ---
+add_to_queue "theme" "papirus-icon-theme"
+
+# 🚀 Execute Master Batch
+echo "🔥 Executing Master Batch Installation..."
+sudo apt update
+sudo apt install $APT_FLAGS $PKG_QUEUE
+
+# ⚙️ Post-Install Configurations
+if [ "$DO_NVIDIA_FIX" = true ]; then
+    echo "⚙️ Applying NVIDIA Power Management configuration..."
+    echo "options nvidia NVreg_PreserveVideoMemoryAllocations=1 NVreg_TemporaryFilePath=/var/tmp" | sudo tee /etc/modprobe.d/nvidia-power-management.conf
+    sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service || true
+fi
+
+install_if_requested() { :; } # No-op for compatibility with remaining logic
 install_if_requested "wpg" ""
 
 # WPGTK & Pywal installation (requires pipx)
