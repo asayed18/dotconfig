@@ -35,7 +35,7 @@ bspc config pointer_action2 resize_corner
 
 #AutoStart
 $HOME/.config/polybar/launch.sh & disown
-setxkbmap -option grp:alt_caps_toggle us,ar &
+setxkbmap -option grp:alt_caps_toggle us,ara &
 xfce4-power-manager --daemon &  disown
 nm-applet &  disown
 mpd & disown

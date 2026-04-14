@@ -202,3 +202,11 @@ super + bracketright
 # PyWallpaper Theme Selection
 super + alt + w
 	$HOME/projects/dotconfig/scripts/pywallpaper.sh
+
+# Reload Polybar
+super + alt + p
+	/home/ahmed/projects/dotconfig/modules/bar/polybar/.config/polybar/launch.sh
+
+
+super + alt + r
+	bspc wm -r

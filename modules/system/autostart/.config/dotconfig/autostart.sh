@@ -117,3 +117,7 @@ apply_wallpaper
 [ -f "$HOME/.config/dotconfig/autostart.local" ] && . "$HOME/.config/dotconfig/autostart.local"
 
 echo "--- Finished: $(date) ---"
+
+
+# BSPWM specific layout/monitor setups can remain here
+setxkbmap -layout us,ara -option grp:alt_shift_toggle &

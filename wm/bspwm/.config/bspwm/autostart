@@ -6,6 +6,5 @@ if [ -f "$HOME/.config/dotconfig/autostart.sh" ]; then
     bash "$HOME/.config/dotconfig/autostart.sh" &
 fi
 
-# BSPWM specific layout/monitor setups can remain here
-setxkbmap -option grp:alt_caps_toggle us,ar &
 
+ 
