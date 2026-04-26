@@ -59,7 +59,7 @@ bindsym $mod+q kill
 # bindsym Ctrl+space exec rofi -show drun -columns 3
 
 # Unify app shortcuts using sxhkd
-exec --no-startup-id sxhkd -c ~/.config/sxhkd/sxhkdrc
+# Started by unified autostart
 
 # Move between windows
 bindsym $mod+h focus left

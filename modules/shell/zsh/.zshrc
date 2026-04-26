@@ -7,7 +7,7 @@
 export EDITOR="editor"
 export VISUAL="editor"
 export TERMINAL="terminal"
-export BROWSER="browser"
+export BROWSER="chromium-browser"
 
 # --- ZSH Core Variables ---
 export ZSH="$HOME/.oh-my-zsh"

@@ -143,7 +143,7 @@ Requires sudo access. Skip if packages are already installed." 15 65
         5) # Optional Categories (Checklists)
             # We process multiple checkbox categories in sequence to allow Back within them?
             # Or one big list? Let's do one check-list per category for clarity.
-            CHECKS=("bar" "compositor" "launcher" "media" "system" "theme" "vcs")
+            CHECKS=("bar" "compositor" "launcher" "media" "system" "theme" "tools" "vcs")
             CUR_CAT_IDX=0
             # We use a sub-step logic here
             while [ "$CUR_CAT_IDX" -lt "${#CHECKS[@]}" ] && [ "$CUR_CAT_IDX" -ge 0 ]; do

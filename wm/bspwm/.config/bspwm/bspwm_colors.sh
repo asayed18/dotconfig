@@ -2,7 +2,7 @@
 
 if [ -f "$HOME/.cache/wal/colors.sh" ]; then
     . "$HOME/.cache/wal/colors.sh"
-    bspc config focused_border_color "$color4"
+    bspc config focused_border_color "$color2"
     bspc config normal_border_color  "$color0"
 else
     bspc config focused_border_color "#8f5d62"

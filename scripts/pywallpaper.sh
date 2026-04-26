@@ -18,7 +18,7 @@ module_enabled() {
 }
 
 if [ -z "$1" ]; then
-    SELECTION=$(find "$HOME/Pictures" -type f | rofi -dmenu -p 'Select Wallpaper')
+    SELECTION=$(find "$HOME/Pictures" -type f ! -name "desktop.png" | rofi -dmenu -p 'Select Wallpaper')
     if [ -z "$SELECTION" ]; then
         exit 0
     fi
@@ -32,11 +32,19 @@ if [ ! -f "$IMG_PATH" ]; then
     exit 1
 fi
 
+# Set new desktop.png
+DESKTOP_IMG="$HOME/Pictures/desktop.png"
+if [ "$IMG_PATH" != "$DESKTOP_IMG" ]; then
+    cp "$IMG_PATH" "$DESKTOP_IMG"
+    IMG_PATH="$DESKTOP_IMG"
+fi
+
 echo "🎨 Extracting colors and applying theme from: $(basename "$IMG_PATH")"
 
 # 1. Add and Set the wallpaper in wpgtk
-# This generates the output files in ~/.config/wpg/templates/
-wpg -a "$IMG_PATH"
+# We delete the entry first to force wpgtk to re-extract colors for the new desktop.png
+wpg -d "$(basename "$IMG_PATH")" 2>/dev/null
+wpg -a "$IMG_PATH" --backend colorz
 wpg -s "$(basename "$IMG_PATH")"
 
 # 2. Dynamic Manual Symlinks

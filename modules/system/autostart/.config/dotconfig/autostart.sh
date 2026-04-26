@@ -40,14 +40,76 @@ run() {
     fi
 }
 
-# 2. Base Services (Always needed)
+apply_wallpaper() {
+    echo "🎨 Applying background..."
+
+    local restored=false
+    local WP_PATH="$HOME/Pictures/desktop.png"
+
+    if module_enabled "theme/wpg" && command -v wpg &>/dev/null; then
+        if [ -n "$(wpg -l 2>/dev/null)" ] && [ -f "$HOME/.config/wpg/.current" ]; then
+            echo "✨ Restoring wpgtk theme..."
+            if wpg -r; then
+                restored=true
+            fi
+        fi
+    fi
+
+    if [ "$restored" = false ] && command -v feh &> /dev/null && [ -f "$WP_PATH" ]; then
+        echo "🖼️ Restoring wallpaper with feh: $WP_PATH"
+        feh --bg-fill "$WP_PATH"
+    fi
+}
+
+resync_settings() {
+    echo "🔄 Resyncing display and keyboard settings..."
+    xset dpms force on || true
+    xrandr --auto || true
+    sleep 1
+    xset dpms force on || true
+    setxkbmap -layout us,ara -option grp:alt_shift_toggle
+    apply_wallpaper
+    echo "✅ Resync complete."
+}
+
+# 2. Resume Listener (Watch for system wake-up)
+start_resume_listener() {
+    if pgrep -f "dbus-monitor.*PrepareForSleep" > /dev/null; then
+        echo "📡 Resume listener already running."
+        return
+    fi
+
+    echo "📡 Starting resume listener..."
+    (
+        # stdbuf -oL ensures line-buffering so grep catches signals immediately
+        stdbuf -oL dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'" | while read -r line; do
+            if echo "$line" | grep -q "boolean false"; then
+                echo "🌙 System resumed from standby. Triggering resync..."
+                sleep 3 # Wait for hardware to initialize
+                # Use absolute path to ensure accuracy
+                bash "$HOME/.config/dotconfig/autostart.sh" --resync
+            fi
+        done
+    ) &
+}
+
+# 3. Argument Parsing
+if [[ "$1" == "--resync" ]]; then
+    resync_settings
+    exit 0
+fi
+
+# 4. Base Services (Always needed)
 echo "🔧 Initializing core services..."
 
-# GPU & Display Resync (Essential for NVIDIA Resume)
-echo "🔄 Resetting GPU synchronization..."
-xset dpms force on
-xrandr --auto
-sleep 0.5 
+# Ensure Betterlockscreen cache is ready (Fixes "No login screen" issue)
+if [ ! -d "$HOME/.cache/betterlockscreen" ] || [ -z "$(ls -A "$HOME/.cache/betterlockscreen" 2>/dev/null)" ]; then
+    echo "🔒 Initializing lockscreen cache..."
+    betterlockscreen -u "$HOME/Pictures/desktop.png" &
+fi
+
+# Initial Resync
+resync_settings
 
 # Polkit Authentication Agent
 POLKIT_PATHS=(
@@ -68,16 +130,17 @@ done
 run nm-applet
 run xfce4-power-manager --daemon
 run udiskie -t
-# Automatic lock on sleep/idle
-run xss-lock --transfer-sleep-lock -- betterlockscreen -l dimblur
+# Automatic lock on sleep/idle (Corrected --nofork passing)
+run xss-lock --transfer-sleep-lock -- betterlockscreen -l dimblur -- --nofork
 
-# 3. Modular App Services (Conditional)
+# 5. Modular App Services (Conditional)
 module_enabled "sxhkd" && run sxhkd -c "$HOME/.config/sxhkd/sxhkdrc"
 module_enabled "dunst" && run dunst
 module_enabled "picom" && run picom -b
 module_enabled "mpd"   && run mpd
+module_enabled "voice" && run ydotoold
 
-# 4. Bar & Interface
+# 6. Bar & Interface
 if module_enabled "polybar"; then
     LAUNCH_SCRIPT="$HOME/.config/polybar/launch.sh"
     if [ -f "$LAUNCH_SCRIPT" ]; then
@@ -88,36 +151,10 @@ if module_enabled "polybar"; then
     fi
 fi
 
-# 5. Robust Theme & Wallpaper Logic
-apply_wallpaper() {
-    echo "🎨 Applying background..."
-    
-    # Try wpgtk first if enabled
-    if module_enabled "theme/wpg" && command -v wpg &>/dev/null; then
-        if [ -n "$(wpg -l 2>/dev/null)" ] && [ -f "$HOME/.config/wpg/.current" ]; then
-            echo "✨ Restoring wpgtk theme..."
-            wpg -r &
-        fi
-    fi
+# 7. Resume Listener (Watch for system wake-up)
+start_resume_listener
 
-    # Fallback to feh if wpg fails or is disabled
-    # We always run this as a secondary safety to ensure no black screen
-    if command -v feh &> /dev/null; then
-        local WP_PATH="$HOME/Pictures/desktop.png"
-        if [ -f "$WP_PATH" ]; then
-            echo "🖼️ Falling back to feh for $WP_PATH"
-            feh --bg-fill "$WP_PATH" &
-        fi
-    fi
-}
-
-apply_wallpaper
-
-# 6. Local Overrides
+# 8. Local Overrides
 [ -f "$HOME/.config/dotconfig/autostart.local" ] && . "$HOME/.config/dotconfig/autostart.local"
 
 echo "--- Finished: $(date) ---"
-
-
-# BSPWM specific layout/monitor setups can remain here
-setxkbmap -layout us,ara -option grp:alt_shift_toggle &

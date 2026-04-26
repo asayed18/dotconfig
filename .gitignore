@@ -1,0 +1,33 @@
+# Backup files created by symlink.sh
+*.bak
+*.bkp
+*.save
+
+# Emacs/Vim temp files
+#*#
+*~
+.*.swp
+.*.swo
+
+# Logs
+*.log
+
+# OS/WM generated caches
+.cache/
+.wpgtk/
+.themes/
+
+# Local state files
+.local/state/
+
+# IDE/Editor
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# wpgtk generated templates
+modules/theme/wpg/.config/wpg/templates/*.base

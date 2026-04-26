@@ -191,6 +191,10 @@ XF86AudioRaiseVolume
 XF86AudioMute
 	pactl -- set-sink-mute 0 toggle
 
+# Toggle MPD Source (Local Music / Radio)
+super + alt + m
+	~/.config/polybar/scripts/mpd-toggle-source.sh
+
 # Monitor Brightness (ddcutil)
 super + bracketleft
 	ddcutil setvcp 10 - 10
@@ -207,6 +211,11 @@ super + alt + w
 super + alt + p
 	/home/ahmed/projects/dotconfig/modules/bar/polybar/.config/polybar/launch.sh
 
+# Push-to-talk (Double-tap Super and Hold)
+~Super_L
+	/home/ahmed/projects/dotconfig/scripts/push_to_talk.sh tap_press
+~Super_R
+	/home/ahmed/projects/dotconfig/scripts/push_to_talk.sh tap_press
 
 super + alt + r
 	bspc wm -r

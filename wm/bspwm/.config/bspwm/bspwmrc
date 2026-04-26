@@ -1,11 +1,10 @@
 #! /bin/bash
 bspc rule -r  "*"
 
-pgrep -x sxhkd > /dev/null || sxhkd &
 
 bspc monitor -d 󰌢 󰈹 󰨞 󰈙 󰓇 󰊴 -
 
-bspc config border_width  2 
+bspc config border_width  5 
 #. "${HOME}/.cache/wal/colors.sh"
 if [[ -f "${HOME}/.config/bspwm/bspwm_colors.sh" ]]
 then
@@ -68,7 +67,7 @@ bspc rule -a "Code - OSS" desktop='^3' follow=on
 bspc rule -a "Emacs" desktop='^3' follow=on
 bspc rule -a "Sublime_text" desktop='^3' follow=on
 bspc rule -a "sublime_text" desktop='^3' follow=on
-bspc rule -a "sticky_note" state=floating sticky=on focus=on rectangle=400x400+100+100
+bspc rule -a "sticky_note" state=floating sticky=on focus=on rectangle=900x600+100+100
 
 # Workspace 4
 bspc rule -a '@joplinapp-desktop' desktop='^4' follow=on

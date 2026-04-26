@@ -2,7 +2,7 @@
 
 
 if [ -z "$(xdotool search -class sticky_note)" ]; then
-    kitty --class sticky_note -c $HOME/.config/kitty/stick_note.conf -e vim -y ~/sticky_note.md
+    terminal --class sticky_note -e vim -c "vsplit | vertical resize 60% | terminal glow --watch ~/sticky_note.md" -c "wincmd h" ~/sticky_note.md
 else
     for w in $(xdotool search -class sticky_note); do
         xdotool windowkill $w;

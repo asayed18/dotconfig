@@ -17,7 +17,8 @@ PKG_QUEUE="lxappearance nitrogen feh lxpolkit udiskie dunst picom sxhkd xss-lock
     xfce4-power-manager network-manager-gnome pulseaudio-utils xclip build-essential \
     curl wget git gawk util-linux wmctrl xdotool inotify-tools i3lock dmenu \
     brightnessctl redshift fonts-noto-color-emoji fonts-font-awesome arc-theme \
-    python3-pip pipx imagemagick bc"
+    python3-pip python3-venv pipx imagemagick bc vim glow screenkey \
+    alsa-utils libnotify-bin ydotool"
 
 DO_NVIDIA_FIX=false
 # 1a. NVIDIA Check
@@ -73,6 +74,9 @@ add_to_queue "git" "git"
 # --- Services ---
 add_to_queue "redshift" "redshift"
 
+# --- Tools ---
+add_to_queue "voice" "ffmpeg"
+
 # --- Themes ---
 add_to_queue "theme" "papirus-icon-theme"
 
@@ -97,6 +101,10 @@ if [[ "$MODULES_LIST" == *"wpg"* ]]; then
     pipx inject wpgtk haishoku  # Add better color extraction backend
     touch "$HOME/.Xresources"   # Prevent xrdb errors
     export PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [[ "$MODULES_LIST" == *"voice"* ]]; then
+    python3 -m pip install --user --upgrade faster-whisper
 fi
 
 # 4. Third-Party / Script-based Installs

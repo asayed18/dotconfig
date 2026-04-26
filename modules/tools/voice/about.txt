@@ -1,0 +1,1 @@
+Push-to-talk dictation using faster-whisper and ydotool.

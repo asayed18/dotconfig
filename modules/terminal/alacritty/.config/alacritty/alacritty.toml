@@ -42,12 +42,12 @@ program = "/home/ahmed/.local/bin/shell"
 [[keyboard.bindings]]
 action = "Paste"
 key = "V"
-mods = "Control|Shift"
+mods = "Control"
 
 [[keyboard.bindings]]
 action = "Copy"
 key = "C"
-mods = "Control|Shift"
+mods = "Control"
 
 [[keyboard.bindings]]
 action = "ResetFontSize"
@@ -63,3 +63,8 @@ mods = "Control"
 action = "DecreaseFontSize"
 key = "Minus"
 mods = "Control"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
